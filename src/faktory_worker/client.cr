@@ -72,10 +72,10 @@ module Faktory
 
     private def handshake_payload
       {
-        :hostname => @location.host.as(String),
-        :pid => Process.pid,
-        :labels => @labels,
-        :v => 2
+        hostname: @location.host.as(String),
+        pid:      Process.pid,
+        labels:   @labels,
+        v:        2
       }
     end
 

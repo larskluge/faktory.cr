@@ -46,7 +46,7 @@ module Faktory
       @@url ||= ENV[Faktory.provider]
       return @@url.as(String)
     rescue
-      Faktory.log.fatal("Unable to extract Faktory server URL from environment variable" + Faktory.provider)
+      Faktory.log.fatal("Unable to extract Faktory server URL from environment variable #{Faktory.provider}")
       raise "MissingURLError"
     end
   end

@@ -3,11 +3,11 @@ module Faktory
   abstract struct Job
 
     GLOBAL_JOB_DEFAULTS = {
-      :queue => "default",
-      :priority => 5,
-      :reserve_for => 1800,
-      :retry => 25,
-      :backtrace => 0
+      queue:       "default",
+      priority:    5,
+      reserve_for: 1800,
+      retry:       25,
+      backtrace:   0
     }
   
     macro configure_defaults(default_hash)
@@ -244,7 +244,7 @@ module Faktory
         # Serializes the job into JSON.
         protected def serialize(option_deck : OptionDeck) : String
           option_hash = option_deck.expose
-          { :jid => @jid, :jobtype =>  JOBTYPE, :args => args }.merge(option_hash).to_json
+          { jid: @jid, jobtype:  JOBTYPE, args: args }.merge(option_hash).to_json
         end
 
         # Deserializes a JSON payload into a job.

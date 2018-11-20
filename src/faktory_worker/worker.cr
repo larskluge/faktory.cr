@@ -131,7 +131,7 @@ module Faktory
     end
 
     private def process(job : Job)
-      Faktory.log.info("START " + job.jid)
+      Faktory.log.info("START #{job.jid}")
       begin
         job.perform
         @consumer.ack(job.jid)

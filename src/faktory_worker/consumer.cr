@@ -4,7 +4,7 @@ module Faktory
     @wid : String
 
     private def handshake_payload
-      super.merge({:wid => @wid})
+      super.merge({wid: @wid})
     end
 
     def initialize
@@ -23,7 +23,7 @@ module Faktory
         send_command("BEAT", beat_payload)
         response = get_server_response
       end
-      unless response.as(String) == "OK"
+      if response.as(String) != "OK"
         JSON.parse(response.as(String))["state"].as_s
       else
         nil
@@ -62,7 +62,7 @@ module Faktory
         jid:        jid,
         backtrace:  exception.backtrace
       }.to_json
-      Faktory.log.warn("FAIL " + fail_payload)
+      Faktory.log.warn("FAIL #{fail_payload}")
 
       retry_if_necessary do
         send_command("FAIL", fail_payload)

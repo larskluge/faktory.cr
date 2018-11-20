@@ -6,7 +6,7 @@ module Faktory
     end
 
     def push(serialized_job : String)
-      Faktory.log.info("PUSH " + serialized_job)
+      Faktory.log.info("PUSH #{serialized_job}")
       retry_if_necessary do
         send_command("PUSH", serialized_job)
         verify_ok
