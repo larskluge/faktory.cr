@@ -136,11 +136,11 @@ Perfect for your application's config file:
 
 ```crystal
 Faktory::Job.configure_defaults({
-  queue       => "custom",
-  priority    => 7,
-  retry       => 10,
-  backtrace   => 6,
-  reserve_for => 60
+  queue:       "custom",
+  priority:    7,
+  retry:       10,
+  backtrace:   6,
+  reserve_for: 60
 })
 ```
 

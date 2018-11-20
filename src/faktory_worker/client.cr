@@ -6,6 +6,7 @@ require "openssl"
 
 module Faktory
   abstract class Client
+    LABEL_STRING = "crystal-#{Crystal::VERSION}"
 
     @location : URI
     @labels   : Array(String)
@@ -14,7 +15,7 @@ module Faktory
     def initialize
       Faktory.log.debug("Initializing client connection...")
       @location = URI.parse(Faktory.url)
-      @labels = ["crystal-#{Crystal::VERSION}"]
+      @labels = [LABEL_STRING]
       @socket = TCPSocket.new(@location.host.as(String), @location.port.as(Int32))
       perform_initial_handshake
       Faktory.log.debug("Client successfully connected to Faktory server at #{@location}")
@@ -85,6 +86,7 @@ module Faktory
 
     private def renew_socket
       Faktory.log.debug("Renewing socket...")
+      ## TODO(Jack): should old socket be closed?
       @socket = TCPSocket.new(@location.host.as(String), @location.port.as(Int32))
     end
 
@@ -92,16 +94,16 @@ module Faktory
       hi = get_server_response
       password_hash = nil
       if hi
+        ## TODO(Jack): can a scan and cut handle this?
         if hi.as(String) =~ /\AHI (.*)/
           served_hash = JSON.parse($1)
           ver = served_hash["v"].as_i
           if ver > 2
-            warning = <<-WARNING
-            Faktory server protocol #{ver} in use, but this client doesn't speak that version. Your results will be undefined.
-            Upgrade this shard with `shards update faktory_worker` to see if an updated version is available.
-            If you still see this message, open an issue on GitHub.
-            WARNING
-            Faktory.log.warn(warning)
+            Faktory.log.warn(<<-WARNING
+              Faktory server protocol #{ver} in use, but this client doesn't speak that version. Your results will be undefined.
+              Upgrade this shard with `shards update faktory_worker` to see if an updated version is available.
+              If you still see this message, open an issue on GitHub.
+              WARNING)
           end
 
           salt = served_hash["s"]?.try &.as_s?
@@ -120,7 +122,7 @@ module Faktory
             end
           end
         end
-        handshake_payload_string = handshake_payload.merge({:pwdhash => password_hash}).to_json
+        handshake_payload_string = handshake_payload.merge({pwdhash: password_hash}).to_json
         send_command("HELLO", handshake_payload_string)
         verify_ok
       else
@@ -168,12 +170,12 @@ module Faktory
     private def send_command(*args : String)
       command = args.join(" ")
       @socket.puts(command)
-      Faktory.log.debug("> " + command)
+      Faktory.log.debug("> #{command}")
     end
 
     private def verify_ok
       response = get_server_response
-      unless response && response.as(String) == "OK"
+      if response && response.as(String) != "OK"
         Faktory.log.fatal("Server did not verify OK")
         raise "NotOK"
       end
@@ -182,7 +184,7 @@ module Faktory
     private def get_server_response : String?
       line = @socket.gets
       if line
-        Faktory.log.debug("< " + line)
+        Faktory.log.debug("< #{line}")
         case line.char_at(0)
         when '+'
           return line[1..-1].strip

@@ -6,8 +6,8 @@ module Faktory
 
       def initialize
         @options = {
-          :shuffle => true,
-          :queues  => ["default"]
+          shuffle: true,
+          queues:  ["default"]
         }
       end
 
@@ -37,6 +37,7 @@ module Faktory
     @should_heartbeat : Bool
     @running          : Bool
 
+    ## TODO(Jack): what does this debug do?
     def initialize(debug : Bool = false)
       @consumer         = Consumer.new
       @shuffle          = true
@@ -78,9 +79,9 @@ module Faktory
 
     def run(&block : OptionDeck -> OptionDeck)
       option_deck = yield OptionDeck.new
-      options = option_deck.expose
-      @shuffle = options[:shuffle].as(Bool)
-      @queues = options[:queues].as(Array(String))
+      options     = option_deck.expose
+      @shuffle    = options[:shuffle].as(Bool)
+      @queues     = options[:queues].as(Array(String))
       self.run
     end
       

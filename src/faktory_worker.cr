@@ -3,7 +3,12 @@ require "logger"
 module Faktory
   VERSION = "0.1.0"
 
+  ## TODO(Jack): these can be lazy and not exposed to nil
+  #              Maybe another wat to handle this Config class?
   @@log : Logger?
+  @@producer : Producer?
+  @@provider : String?
+  @@url : String?
 
   protected def self.create_logger : Logger
     logger = Logger.new(STDOUT)
@@ -21,17 +26,13 @@ module Faktory
     @@log ||= self.create_logger
   end
 
-  @@producer : Producer?
-
   protected def self.producer : Producer
     @@producer ||= Producer.new
   end
 
-  @@provider : String?
-
   def self.provider : String
     begin
-      @@provider ||= ENV["FAKTORY_PROVIDER"]
+      @@provider ||= ENV["FAKTORY_PROVIDER"] || "FAKTORY_URL"
       return @@provider.as(String)
     rescue
       Faktory.log.fatal("Missing FAKTORY_PROVIDER environment variable")
@@ -39,11 +40,9 @@ module Faktory
     end
   end
 
-  @@url : String?
-
   def self.url : String
     begin
-      @@url ||= ENV[Faktory.provider]
+      @@url ||= ENV[Faktory.provider || "tcp://localhost:7419"]
       return @@url.as(String)
     rescue
       Faktory.log.fatal("Unable to extract Faktory server URL from environment variable #{Faktory.provider}")

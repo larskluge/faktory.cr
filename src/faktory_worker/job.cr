@@ -83,6 +83,7 @@ module Faktory
       REGISTRY[jobtype].call(payload)
     end
 
+    ## TODO(Jack): replace with new UUID semantics
     def initialize(jid : String = SecureRandom.hex(12))
       @jid = jid
     end
@@ -146,6 +147,7 @@ module Faktory
 
       @options : Hash(Symbol, Int32 | String)
 
+      ## TODO(Jack): use assignment semantics
       def initialize(option_hash : Hash(Symbol, Int32 | String))
         @options = option_hash
       end
