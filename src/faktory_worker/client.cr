@@ -179,7 +179,7 @@ module Faktory
       end
     end
 
-    private def get_server_response : String | Nil
+    private def get_server_response : String?
       line = @socket.gets
       if line
         Faktory.log.debug("< " + line)

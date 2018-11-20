@@ -12,7 +12,7 @@ module Faktory
       super
     end
 
-    def beat : String | Nil
+    def beat : String?
       beat_payload = {
         wid: @wid
       }.to_json
@@ -30,7 +30,7 @@ module Faktory
       end
     end
 
-    def fetch(queues : Array(String)) : JSON::Any | Nil
+    def fetch(queues : Array(String)) : JSON::Any?
       job = nil
       retry_if_necessary do
         send_command("FETCH", queues.join(" "))

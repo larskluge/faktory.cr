@@ -59,8 +59,8 @@ module Faktory
 
     # job ID
     @jid          : String
-    @created_at   : Time | Nil
-    @enqueued_at  : Time | Nil
+    @created_at   : Time?
+    @enqueued_at  : Time?
 
     protected def jid : String
       @jid
