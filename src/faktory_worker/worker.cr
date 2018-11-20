@@ -120,7 +120,7 @@ module Faktory
       @shuffle
     end
 
-    private def fetch : Job | Nil
+    private def fetch : Job?
       @queues = @queues.shuffle if shuffle?
       job_payload = @consumer.fetch(@queues)
       if job_payload
