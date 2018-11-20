@@ -1,8 +1,9 @@
 require "./faktory_worker/**"
 require "logger"
 module Faktory
+  VERSION = "0.1.0"
 
-  @@log : Logger | Nil
+  @@log : Logger?
 
   protected def self.create_logger : Logger
     logger = Logger.new(STDOUT)
@@ -20,13 +21,13 @@ module Faktory
     @@log ||= self.create_logger
   end
 
-  @@producer : Producer | Nil
+  @@producer : Producer?
 
   protected def self.producer : Producer
     @@producer ||= Producer.new
   end
 
-  @@provider : String | Nil
+  @@provider : String?
 
   def self.provider : String
     begin
@@ -38,7 +39,7 @@ module Faktory
     end
   end
 
-  @@url : String | Nil
+  @@url : String?
 
   def self.url : String
     begin
