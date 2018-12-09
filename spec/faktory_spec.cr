@@ -1,9 +1,18 @@
 require "./spec_helper"
 
-describe Faktory do
-  # TODO: Write tests
+struct Job < Faktory::Job
+  arg int : Int32
+  arg string : String
 
-  # it "works" do
-  #   false.should eq(true)
-  # end
+  def perform
+    "#{int}-#{string}"
+  end
+end
+
+describe Faktory do
+  describe Job do
+    it "compiles" do
+      true.should eq(true)
+    end
+  end
 end
