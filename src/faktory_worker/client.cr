@@ -99,11 +99,11 @@ module Faktory
           served_hash = JSON.parse($1)
           ver = served_hash["v"].as_i
           if ver > 2
-            Faktory.log.warn(<<-WARNING
+            Faktory.log.warn("
               Faktory server protocol #{ver} in use, but this client doesn't speak that version. Your results will be undefined.
               Upgrade this shard with `shards update faktory_worker` to see if an updated version is available.
               If you still see this message, open an issue on GitHub.
-              WARNING)
+            ")
           end
 
           salt = served_hash["s"]?.try &.as_s?
