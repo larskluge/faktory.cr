@@ -31,13 +31,8 @@ module Faktory
   end
 
   def self.provider : String
-    begin
-      @@provider ||= ENV["FAKTORY_PROVIDER"] || "FAKTORY_URL"
-      return @@provider.as(String)
-    rescue
-      Faktory.log.fatal("Missing FAKTORY_PROVIDER environment variable")
-      raise "MissingProviderError"
-    end
+    @@provider ||= ENV["FAKTORY_PROVIDER"]? || "FAKTORY_URL"
+    return @@provider.as(String)
   end
 
   def self.url : String
