@@ -210,7 +210,7 @@ module Faktory
         # Merge Faktory defaults into this job's defaults.
         \{% for k, v in GLOBAL_JOB_DEFAULTS %}
           \{% if JOBTYPE_DEFAULTS[k] == nil %}
-            \{% JOBTYPE_DEFAULTS[k] = v %}
+            \{% JOBTYPE_DEFAULTS[k.symbolize] = v %}
           \{% end %}
         \{% end %}
 
@@ -244,9 +244,10 @@ module Faktory
         end
 
         # Serializes the job into JSON.
-        protected def serialize(option_deck : OptionDeck) : String
+        protected def serialize(option_deck : OptionDeck? = nil) : String
+          option_deck ||= OptionDeck.new(JOBTYPE_DEFAULTS)
           option_hash = option_deck.expose
-          { jid: @jid, jobtype:  JOBTYPE, args: args }.merge(option_hash).to_json
+          {"jid" => @jid, "jobtype" => JOBTYPE, "args" => args}.merge(option_hash).to_json
         end
 
         # Deserializes a JSON payload into a job.
